@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 //Using Routes
-app.use("/api/v1/user", userRoutes);
+app.use("/api/user", userRoutes);
 
 //Middleware-Custom
 app.use(errorMiddleware);
