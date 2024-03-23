@@ -45,3 +45,9 @@ export interface BaseQuery {
   };
   category?: string;
 }
+
+export type RevalidateCacheProps = {
+  product?: boolean;
+  order?: boolean;
+  admin?: boolean;
+};
