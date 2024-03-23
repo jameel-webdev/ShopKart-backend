@@ -1,9 +1,10 @@
 import express from "express";
 import { connectDb } from "./utils/db.js";
+import { errorMiddleware } from "./middlewares/error.js";
 
 // Importing Routes
 import userRoutes from "./routes/user.route.js";
-import { errorMiddleware } from "./middlewares/error.js";
+import productRoutes from "./routes/product.route.js";
 
 const port = 5000;
 connectDb(); //Database connection
@@ -18,6 +19,10 @@ app.get("/", (req, res) => {
 
 //Using Routes
 app.use("/api/user", userRoutes);
+app.use("/api/product", productRoutes);
+
+//Making a folder static to access files
+app.use("/uploads", express.static("uploads"));
 
 //Middleware-Custom
 app.use(errorMiddleware);

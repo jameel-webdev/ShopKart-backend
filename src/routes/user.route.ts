@@ -9,13 +9,13 @@ import { adminOnly } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-//Route - /api/vi/user/new
+//Route - /api/user/new
 router.post("/new", newUser);
 
-//Route - /api/vi/user/all
+//Route - /api/user/all
 router.get("/all", adminOnly, getAllUsers);
 
-//Route - /api/vi/user/:id
+//Route - /api/user/:id
 router.route("/:id").get(getUserById).delete(adminOnly, deleteUserById);
 
 export default router;
