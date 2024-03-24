@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-export const connectDb = async () => {
+export const connectDb = async (uri: string) => {
   try {
-    const connect = await mongoose.connect("mongodb://localhost:27017", {
+    const connect = await mongoose.connect(uri, {
       dbName: "Ecommerse2024",
     });
     console.log(`MongoDb connected on host ${connect.connection.host}`);
