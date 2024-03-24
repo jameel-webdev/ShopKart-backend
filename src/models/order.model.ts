@@ -26,7 +26,7 @@ const schema = new mongoose.Schema(
     },
     user: {
       type: String,
-      ref: "User",
+      ref: "user",
       required: true,
     },
 
@@ -63,7 +63,7 @@ const schema = new mongoose.Schema(
         quantity: Number,
         productId: {
           type: mongoose.Types.ObjectId,
-          ref: "Product",
+          ref: "product",
         },
       },
     ],

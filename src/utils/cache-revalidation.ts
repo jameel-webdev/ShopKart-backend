@@ -6,26 +6,39 @@ export const revalidateCache = async ({
   product,
   order,
   admin,
+  userId,
+  orderId,
+  productId,
 }: RevalidateCacheProps) => {
   if (product) {
     const productKeys: string[] = [
       "latest-products",
       "categories",
-      "allproducts",
+      "all-products",
     ];
 
-    const productsId = await Product.find({}).select("_id");
+    if (typeof productId === "string") productKeys.push(`product-${productId}`);
 
-    productsId.forEach((element) => {
-      const id = element._id;
-
-      productKeys.push(`single-product-${id}`);
-    });
+    if (typeof productId === "object")
+      productId.forEach((i) => productKeys.push(`product-${i}`));
 
     nodeCache.del(productKeys);
   }
   if (order) {
+    const ordersKeys: string[] = [
+      "all-orders",
+      `my-orders-${userId}`,
+      `order-${orderId}`,
+    ];
+
+    nodeCache.del(ordersKeys);
   }
   if (admin) {
+    nodeCache.del([
+      "admin-stats",
+      "admin-pie-charts",
+      "admin-bar-charts",
+      "admin-line-charts",
+    ]);
   }
 };

@@ -3,6 +3,7 @@ import {
   deleteOrder,
   getAllOrders,
   getOneOrder,
+  myOrders,
   newOrder,
   updateOrder,
 } from "../controllers/order.controller.js";
@@ -12,6 +13,9 @@ const router = express.Router();
 
 //Route - /api/order/new
 router.post("/new", newOrder);
+
+//Route - /api/order/myorders
+router.get("/myorders", myOrders);
 
 //Route - /api/order/myorders
 router.get("/allorders", adminOnly, getAllOrders);
