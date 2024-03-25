@@ -21,6 +21,10 @@ router.get("/myorders", myOrders);
 router.get("/allorders", adminOnly, getAllOrders);
 
 //Route - /api/order/:id
-router.route("/:id").get(getOneOrder).put(updateOrder).delete(deleteOrder);
+router
+  .route("/:id")
+  .get(getOneOrder)
+  .put(adminOnly, updateOrder)
+  .delete(adminOnly, deleteOrder);
 
 export default router;

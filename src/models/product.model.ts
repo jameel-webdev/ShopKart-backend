@@ -28,4 +28,4 @@ const schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Product = mongoose.model("product", schema);
+export const Product = mongoose.model("Product", schema);

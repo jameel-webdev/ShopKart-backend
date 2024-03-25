@@ -1,5 +1,4 @@
 import { nodeCache } from "../app.js";
-import { Product } from "../models/product.model.js";
 import { RevalidateCacheProps } from "../types/types.js";
 
 export const revalidateCache = async ({
@@ -17,17 +16,18 @@ export const revalidateCache = async ({
       "all-products",
     ];
 
-    if (typeof productId === "string") productKeys.push(`product-${productId}`);
+    if (typeof productId === "string")
+      productKeys.push(`single-product-${productId}`);
 
     if (typeof productId === "object")
-      productId.forEach((i) => productKeys.push(`product-${i}`));
+      productId.forEach((i) => productKeys.push(`single-product-${i}`));
 
     nodeCache.del(productKeys);
   }
   if (order) {
     const ordersKeys: string[] = [
-      "all-orders",
-      `my-orders-${userId}`,
+      "allorders",
+      `myorders-${userId}`,
       `order-${orderId}`,
     ];
 

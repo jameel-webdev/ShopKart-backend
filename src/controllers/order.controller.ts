@@ -24,7 +24,7 @@ export const newOrder = TryCatch(
       return next(new ErrorHandler("Please provide all fields", 400));
     }
 
-    await Order.create({
+    const order = await Order.create({
       shippingInfo,
       shippingCharges,
       user,
@@ -37,7 +37,13 @@ export const newOrder = TryCatch(
 
     await reduceStock(orderItems);
 
-    await revalidateCache({ order: true, product: true, admin: true });
+    await revalidateCache({
+      product: true,
+      order: true,
+      admin: true,
+      userId: user,
+      productId: order.orderItems.map((i) => String(i.productId)),
+    });
 
     return res.status(201).json({
       success: true,
@@ -47,14 +53,13 @@ export const newOrder = TryCatch(
 );
 
 export const myOrders = TryCatch(async (req, res, next) => {
-  const { id: userId } = req.query;
-
+  const user = req.query.id as string;
   let orders = [];
-  const key = `myorders-${userId}`;
+  const key = `myorders-${user}`;
   if (nodeCache.has(key)) {
     orders = JSON.parse(nodeCache.get(key) as string);
   } else {
-    orders = await Order.find({ userId });
+    orders = await Order.find({ user });
     nodeCache.set(key, JSON.stringify(orders));
   }
   return res.status(200).json({
@@ -100,6 +105,7 @@ export const getAllOrders = TryCatch(async (req, res, next) => {
 export const updateOrder = TryCatch(async (req, res, next) => {
   const { id } = req.params;
   const order = await Order.findById(id);
+
   if (!order) {
     return next(new ErrorHandler("Order not found", 404));
   }
@@ -117,7 +123,7 @@ export const updateOrder = TryCatch(async (req, res, next) => {
 
   await order.save();
 
-  revalidateCache({
+  await revalidateCache({
     product: false,
     order: true,
     admin: true,
@@ -126,6 +132,7 @@ export const updateOrder = TryCatch(async (req, res, next) => {
   });
   return res.status(200).json({
     success: true,
+    message: "Order processed successfully",
   });
 });
 export const deleteOrder = TryCatch(async (req, res, next) => {
@@ -136,7 +143,7 @@ export const deleteOrder = TryCatch(async (req, res, next) => {
 
   await order.deleteOne();
 
-  revalidateCache({
+  await revalidateCache({
     product: false,
     order: true,
     admin: true,
@@ -145,5 +152,6 @@ export const deleteOrder = TryCatch(async (req, res, next) => {
   });
   return res.status(200).json({
     success: true,
+    message: "Order deleted successfully",
   });
 });
