@@ -8,6 +8,7 @@ import { config } from "dotenv";
 import userRoutes from "./routes/user.route.js";
 import productRoutes from "./routes/product.route.js";
 import orderRoutes from "./routes/order.route.js";
+import paymentRoutes from "./routes/payment.route.js";
 
 config();
 const port = process.env.PORT || 5000;
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 app.use("/api/user", userRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/order", orderRoutes);
+app.use("/api/payment", paymentRoutes);
 
 //Making a folder static to access files
 app.use("/uploads", express.static("uploads"));
