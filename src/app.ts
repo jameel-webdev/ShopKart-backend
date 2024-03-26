@@ -3,6 +3,7 @@ import { connectDb } from "./utils/db.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import NodeCache from "node-cache";
 import { config } from "dotenv";
+import Stripe from "stripe";
 
 // Importing Routes
 import userRoutes from "./routes/user.route.js";
@@ -14,8 +15,10 @@ import dashboardRoutes from "./routes/stats.route.js";
 config();
 const port = process.env.PORT || 5000;
 const dbUrl = process.env.MONGODB_URI || "";
+const stripeKey = process.env.STRIPE_KEY || "";
 connectDb(dbUrl); //Database connection
 
+export const stripe = new Stripe(stripeKey);
 export const nodeCache = new NodeCache(); //NodeCache
 
 const app = express();
