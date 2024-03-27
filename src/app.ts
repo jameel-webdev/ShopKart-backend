@@ -3,6 +3,7 @@ import { connectDb } from "./utils/db.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import NodeCache from "node-cache";
 import { config } from "dotenv";
+import cors from "cors";
 import Stripe from "stripe";
 
 // Importing Routes
@@ -25,9 +26,10 @@ const app = express();
 
 //Middleware-Inbuilt
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
-  res.send("Api wronking with /api/v1");
+  res.send("Api working with /api/v1");
 });
 
 //Using Routes
