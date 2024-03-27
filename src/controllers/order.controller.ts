@@ -137,7 +137,6 @@ export const updateOrder = TryCatch(async (req, res, next) => {
 });
 export const deleteOrder = TryCatch(async (req, res, next) => {
   const { id } = req.params;
-
   const order = await Order.findById(id);
   if (!order) return next(new ErrorHandler("Order Not Found", 404));
 

@@ -10,11 +10,7 @@ export const revalidateCache = ({
   productId,
 }: RevalidateCacheProps) => {
   if (product) {
-    const productKeys: string[] = [
-      "latest-products",
-      "categories",
-      "all-products",
-    ];
+    const productKeys: string[] = ["latest-products", "categories", "products"];
 
     if (typeof productId === "string")
       productKeys.push(`single-product-${productId}`);
@@ -34,8 +30,6 @@ export const revalidateCache = ({
     nodeCache.del(ordersKeys);
   }
   if (admin) {
-    nodeCache.del([
-      "admin-stats",
-    ]);
+    nodeCache.del(["admin-stats"]);
   }
 };
