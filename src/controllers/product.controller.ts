@@ -84,15 +84,15 @@ export const getAllCategories = TryCatch(async (req, res, next) => {
 });
 
 export const getAdminProducts = TryCatch(async (req, res, next) => {
-  let allproducts;
-  if (nodeCache.has("allproducts")) {
-    allproducts = JSON.parse(nodeCache.get("allproducts") as string);
+  let products;
+  if (nodeCache.has("products")) {
+    products = JSON.parse(nodeCache.get("products") as string);
   } else {
-    allproducts = await Product.find({});
-    if (!allproducts) return next(new ErrorHandler("No Data Available", 400));
-    nodeCache.set("allproducts", JSON.stringify(allproducts));
+    products = await Product.find({});
+    if (!products) return next(new ErrorHandler("No Data Available", 400));
+    nodeCache.set("products", JSON.stringify(products));
   }
-  return res.status(200).json({ success: true, allproducts });
+  return res.status(200).json({ success: true, products });
 });
 
 export const getSingleProduct = TryCatch(async (req, res, next) => {
@@ -128,7 +128,7 @@ export const newProduct = TryCatch(
       stock,
     });
     //Clearing the NodeCache after creating new product
-    revalidateCache({ product: true,admin:true });
+    revalidateCache({ product: true, admin: true });
     return res
       .status(201)
       .json({ success: true, message: "Product Created Successfully" });
@@ -155,7 +155,11 @@ export const updateProduct = TryCatch(async (req, res, next) => {
 
   await product.save();
   //Clearing the NodeCache after updating the product
-  revalidateCache({ product: true, admin:true, productId: String(product._id) });
+  revalidateCache({
+    product: true,
+    admin: true,
+    productId: String(product._id),
+  });
   return res.status(200).json({
     success: true,
     message: "Product Updated",
@@ -172,7 +176,11 @@ export const deleteProduct = TryCatch(async (req, res, next) => {
   });
   await product.deleteOne();
   //Clearing the NodeCache after deleting the product
-  revalidateCache({ product: true, admin:true, productId: String(product._id) });
+  revalidateCache({
+    product: true,
+    admin: true,
+    productId: String(product._id),
+  });
 
   return res.status(200).json({
     success: true,
