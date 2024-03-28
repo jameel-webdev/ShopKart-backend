@@ -71,34 +71,34 @@ export const myOrders = TryCatch(async (req, res, next) => {
 export const getOneOrder = TryCatch(async (req, res, next) => {
   const { id } = req.params;
   const key = `order-${id}`;
-  let oneOrder;
+  let order;
   if (nodeCache.has(key)) {
-    oneOrder = JSON.parse(nodeCache.get(key) as string);
+    order = JSON.parse(nodeCache.get(key) as string);
   } else {
-    oneOrder = await Order.findById(id).populate("user", "name");
-    if (!oneOrder) {
+    order = await Order.findById(id).populate("user", "name");
+    if (!order) {
       return next(new ErrorHandler("Order not fount", 404));
     }
-    nodeCache.set(key, JSON.stringify(oneOrder));
+    nodeCache.set(key, JSON.stringify(order));
   }
   return res.status(200).json({
     success: true,
-    oneOrder,
+    order,
   });
 });
 
 export const getAllOrders = TryCatch(async (req, res, next) => {
-  let allorders = [];
+  let orders = [];
 
   if (nodeCache.has("allorders")) {
-    allorders = JSON.parse(nodeCache.get("allorders") as string);
+    orders = JSON.parse(nodeCache.get("allorders") as string);
   } else {
-    allorders = await Order.find().populate("user", "name");
-    nodeCache.set("allorders", JSON.stringify(allorders));
+    orders = await Order.find().populate("user", "name");
+    nodeCache.set("allorders", JSON.stringify(orders));
   }
   return res.status(200).json({
     success: true,
-    allorders,
+    orders,
   });
 });
 
