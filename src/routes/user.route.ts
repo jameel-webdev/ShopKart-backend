@@ -3,6 +3,7 @@ import {
   deleteUserById,
   getAllUsers,
   getUserById,
+  logoutUser,
   newUser,
 } from "../controllers/user.controller.js";
 import { adminOnly } from "../middlewares/auth.js";
@@ -17,5 +18,8 @@ router.get("/all", adminOnly, getAllUsers);
 
 //Route - /api/user/:id
 router.route("/:id").get(getUserById).delete(adminOnly, deleteUserById);
+
+//Route - /api/user/logout
+router.route("/logout").post(logoutUser);
 
 export default router;

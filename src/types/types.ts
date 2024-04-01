@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { NumberExpression } from "mongoose";
 
 export interface NewUserRequestBody {
   _id: string;

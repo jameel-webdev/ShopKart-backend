@@ -3,6 +3,7 @@ import { User } from "../models/user.model.js";
 import { NewUserRequestBody } from "../types/types.js";
 import ErrorHandler from "../utils/utility-class.js";
 import { TryCatch } from "../middlewares/error.js";
+import { generateToken } from "../utils/generate-token.js";
 
 export const newUser = TryCatch(
   async (
@@ -12,10 +13,21 @@ export const newUser = TryCatch(
   ) => {
     const { name, email, photo, gender, dob, _id } = req.body;
     let user = await User.findById(_id);
-    if (user)
+    if (user) {
       return res
         .status(200)
         .json({ success: true, message: `Welcome, ${user.name}` });
+    } else {
+      let userByEmail = await User.findOne({ email });
+      if (userByEmail) {
+        generateToken(res, userByEmail._id);
+        return res.status(200).json({
+          success: true,
+          message: `Welcome, ${userByEmail.name}`,
+          newUser: userByEmail,
+        });
+      }
+    }
 
     if (!_id || !name || !email || !photo || !gender || !dob) {
       next(new ErrorHandler("Please provide all fields", 400));
@@ -64,4 +76,12 @@ export const deleteUserById = TryCatch(async (req, res, next) => {
   return res
     .status(200)
     .json({ success: true, message: "User Deleted Successfully" });
+});
+
+export const logoutUser = TryCatch(async (req, res, next) => {
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  res.status(200).json({ success: true });
 });
